@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 
 Counted: 0.00%
 
 Party                  Current Votes  Current %    Projected Votes  Projected %
 ---------------------------------------------------------------------------
-NAWROCKI                          33      49.3%          5,120,074        39.8%
-TRZASKOWSKI                       34      50.7%          7,752,152        60.2%
+NAWROCKI                          33      49.3%          5,297,816        39.8%
+TRZASKOWSKI                       34      50.7%          8,023,626        60.2%
 
 Administrative divisions that have reported:
 Adm0: 1 out of 1 divisions (100.0%) have at least one reported precinct
@@ -14,20 +13,3 @@ Adm2: 1 out of 18 divisions (5.6%) have at least one reported precinct
 Adm3: 1 out of 90 divisions (1.1%) have at least one reported precinct
 Adm4: 1 out of 465 divisions (0.2%) have at least one reported precinct
 Adm5: 1 out of 2857 divisions (0.0%) have at least one reported precinct
-=======
-
-Counted: 0.00%
-
-Party                  Current Votes  Current %    Projected Votes  Projected %
----------------------------------------------------------------------------
-NAWROCKI                          33      49.3%          5,120,074        39.8%
-TRZASKOWSKI                       34      50.7%          7,752,152        60.2%
-
-Administrative divisions that have reported:
-Adm0: 1 out of 1 divisions (100.0%) have at least one reported precinct
-Adm1: 1 out of 8 divisions (12.5%) have at least one reported precinct
-Adm2: 1 out of 18 divisions (5.6%) have at least one reported precinct
-Adm3: 1 out of 90 divisions (1.1%) have at least one reported precinct
-Adm4: 1 out of 465 divisions (0.2%) have at least one reported precinct
-Adm5: 1 out of 2857 divisions (0.0%) have at least one reported precinct
->>>>>>> 54aa87d (initial upload)
