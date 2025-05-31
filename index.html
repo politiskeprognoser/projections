@@ -9,7 +9,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
   <script>
-    fetch('summary.txt')
+    fetch('summary.txt?' + new Date().getTime())
       .then(response => response.text())
       .then(text => {
         document.getElementById('summary-text').textContent = text;
@@ -29,7 +29,7 @@
         });
         table.appendChild(headerRow);
 
-        data.data.forEach(row => {
+        data.data.slice(0, 3439).forEach(row => {
           const tr = document.createElement('tr');
           data.meta.fields.forEach(field => {
             const td = document.createElement('td');
