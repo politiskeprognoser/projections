@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSV Results</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
+</head>
+<body>
+  <h1>CSV Results</h1>
+  <table border="1" id="csv-table"></table>
+
+  <script>
+    fetch('results.csv')
+      .then(response => response.text())
+      .then(text => {
+        const data = Papa.parse(text, { header: true });
+        const table = document.getElementById('csv-table');
+
+        const headerRow = document.createElement('tr');
+        data.meta.fields.forEach(field => {
+          const th = document.createElement('th');
+          th.textContent = field;
+          headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
+        data.data.forEach(row => {
+          const tr = document.createElement('tr');
+          data.meta.fields.forEach(field => {
+            const td = document.createElement('td');
+            td.textContent = row[field];
+            tr.appendChild(td);
+          });
+          table.appendChild(tr);
+        });
+      });
+  </script>
+</body>
+</html>
