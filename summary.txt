@@ -1,7 +1,7 @@
 
 Counted: 0.00%
 
-Party                  Current Votes  Current %    Projected Votes  Projected %
+Candidate              Current Votes  Current %    Projected Votes  Projected %
 ---------------------------------------------------------------------------
 NAWROCKI                          33      49.3%          5,297,816        39.8%
 TRZASKOWSKI                       34      50.7%          8,023,626        60.2%
