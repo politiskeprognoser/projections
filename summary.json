@@ -1,20 +1,20 @@
 {
-  "timestamp": "2025-06-01T23:33:01+00:00",
-  "counted_pct": 56.91,
+  "timestamp": "2025-06-01T23:45:15+00:00",
+  "counted_pct": 62.82,
   "parties": [
     {
       "name": "NAWROCKI",
-      "current_votes": 6336751,
-      "current_pct": 54.25,
-      "projected_votes": 10722867,
-      "projected_pct": 51.45
+      "current_votes": 6942558,
+      "current_pct": 53.7,
+      "projected_votes": 10700704,
+      "projected_pct": 51.35
     },
     {
       "name": "TRZASKOWSKI",
-      "current_votes": 5343649,
-      "current_pct": 45.75,
-      "projected_votes": 10118999,
-      "projected_pct": 48.55
+      "current_votes": 5985174,
+      "current_pct": 46.3,
+      "projected_votes": 10137264,
+      "projected_pct": 48.65
     }
   ],
   "divisions": {
@@ -31,14 +31,14 @@
       "total_divisions": 90
     },
     "Powiats": {
-      "reported_divisions": 434,
+      "reported_divisions": 441,
       "total_divisions": 465
     },
     "Gminas": {
-      "reported_divisions": 2213,
+      "reported_divisions": 2341,
       "total_divisions": 2857
     }
   },
-  "precincts_reported": 20395,
+  "precincts_reported": 22137,
   "total_precincts": 32143
 }
