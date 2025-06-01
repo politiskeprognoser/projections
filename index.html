@@ -75,6 +75,7 @@
         th.textContent = text;
         th.style.padding = "4px 8px";
         th.style.border = "1px solid black";
+        th.style.textAlign = i === 0 ? "left" : "center";
 
         if (i === 0) {
           th.style.backgroundColor = "#F2F2F2";
@@ -153,7 +154,7 @@ container.appendChild(table);
       const formattedDate = updatedDate.toLocaleString("en-GB", {
         timeZone: "Europe/Warsaw",
         year: 'numeric',
-        month: 'short',
+        month: 'long',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
