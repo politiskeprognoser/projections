@@ -1,15 +1,15 @@
 
-Counted: 30.53%
+Counted: 32.64%
 
 Candidate              Current Votes  Current %    Projected Votes  Projected %
 ---------------------------------------------------------------------------
-NAWROCKI                   3,461,921     55.55%         10,794,369       51.79%
-TRZASKOWSKI                2,770,609     44.45%         10,048,204       48.21%
+NAWROCKI                   3,705,317     55.63%         10,785,990       51.78%
+TRZASKOWSKI                2,955,233     44.37%         10,044,256       48.22%
 
 Places that have reported:
 Macroregions: 8 out of 8 divisions (100.0%) have at least one reported precinct
 Voivodeships: 18 out of 18 divisions (100.0%) have at least one reported precinct
 Sejmik constituencies: 89 out of 90 divisions (98.9%) have at least one reported precinct
-Powiats: 398 out of 465 divisions (85.6%) have at least one reported precinct
-Gminas: 1460 out of 2857 divisions (51.1%) have at least one reported precinct
-Precincts: 11,557 out of 32,143 (36.0%) have reported
+Powiats: 401 out of 465 divisions (86.2%) have at least one reported precinct
+Gminas: 1537 out of 2857 divisions (53.8%) have at least one reported precinct
+Precincts: 12,347 out of 32,143 (38.4%) have reported
