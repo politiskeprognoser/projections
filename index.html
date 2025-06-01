@@ -1,3 +1,10 @@
+<style>
+  #summary-text {
+    font-size: 24px;
+    font-family: monospace;
+    white-space: pre-wrap;
+  }
+</style>
 <body>
   <h1>Polish presidential election projection</h1>
   <h1>Currently values reflect test data! Ignore it for now. Check back at 21:00 CEST for the first projections.</h1>
@@ -8,9 +15,12 @@
   
   <pre id="summary-text">Loading summary...</pre>
 
+  <p id="last-updated">Last updated: loading…</p>
+  
   <p>Download the raw csv <a href="https://politiskeprognoser.github.io/projections/projected.csv" target="_blank">here</a> (includes precinct-level projections).</p>
   <p>Contact me on <a href="https://bsky.app/profile/gust2319.bsky.social" target="_blank">Bluesky</a> or <a href="https://x.com/Gust_2319" target="_blank">X</a>.</p>
-  
+
+  <input type="text" id="filter" placeholder="Filter rows (e.g. Warszawa, Mazowieckie)..." onkeyup="filterTable()">
   <table border="1" id="csv-table"></table>
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
@@ -44,6 +54,16 @@
           });
           table.appendChild(tr);
         });
+        document.getElementById('last-updated').textContent =
+        "Last updated: " + new Date().toLocaleString("pl-PL");
       });
+    function filterTable() {
+  const input = document.getElementById("filter").value.toLowerCase();
+  const rows = document.querySelectorAll("#csv-table tr");
+  rows.forEach((row, index) => {
+    if (index === 0) return; // Keep header always
+    row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+  });
+}
   </script>
 </body>
