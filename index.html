@@ -73,7 +73,8 @@
       ["Candidate", "Current Votes", "Current %", "Projected Votes", "Projected %"].forEach((text, i) => {
         const th = document.createElement("th");
         th.textContent = text;
-        th.style.padding = "4px 8px";
+        th.style.padding = "6px 12px";
+        th.style.fontSize = "18px";
         th.style.border = "1px solid black";
         th.style.textAlign = i === 0 ? "left" : "center";
 
@@ -95,7 +96,8 @@
       [p.name, currVotes, `${p.current_pct.toFixed(1)}%`, projVotes, `${p.projected_pct.toFixed(1)}%`].forEach((val, i) => {
         const td = document.createElement("td");
         td.textContent = val;
-        td.style.padding = "4px 8px";
+        td.style.padding = "6px 12px";
+        td.style.fontSize = "18px";
         td.style.border = "1px solid black";
         td.style.textAlign = i === 0 ? "left" : "center";
 
