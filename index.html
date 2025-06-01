@@ -58,6 +58,8 @@
       // % Counted
       const counted = document.createElement("p");
       counted.innerHTML = `<strong>Counted:</strong> ${data.counted_pct.toFixed(2)}%`;
+      p.style.fontSize = "18px";
+      p.style.margin = "4px 0";
       container.appendChild(counted);
 
       // Results table
@@ -142,8 +144,6 @@ container.appendChild(table);
         const pct = (stats.reported_divisions / stats.total_divisions * 100).toFixed(1);
         const p = document.createElement("p");
         p.textContent = `${pluralLevel}: ${stats.reported_divisions} out of ${stats.total_divisions} divisions (${pct}%) have at least one reported precinct`;
-        p.style.fontSize = "18px";  // ~50% larger
-        p.style.margin = "4px 0";   // Optional: reduce vertical spacing if needed
         container.appendChild(p);
       }
 
