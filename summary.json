@@ -1,0 +1,44 @@
+{
+  "timestamp": "2025-06-01T01:23:21+00:00",
+  "counted_pct": 100.0,
+  "parties": [
+    {
+      "name": "TRZASKOWSKI",
+      "current_votes": 6147743,
+      "current_pct": 31.4,
+      "projected_votes": 6147808,
+      "projected_pct": 31.4
+    },
+    {
+      "name": "NAWROCKI",
+      "current_votes": 5790762,
+      "current_pct": 29.5,
+      "projected_votes": 5790816,
+      "projected_pct": 29.5
+    }
+  ],
+  "divisions": {
+    "Macroregions": {
+      "reported_divisions": 8,
+      "total_divisions": 8
+    },
+    "Voivodeships": {
+      "reported_divisions": 18,
+      "total_divisions": 18
+    },
+    "Sejmik constituencies": {
+      "reported_divisions": 90,
+      "total_divisions": 90
+    },
+    "Powiats": {
+      "reported_divisions": 464,
+      "total_divisions": 465
+    },
+    "Gminas": {
+      "reported_divisions": 2854,
+      "total_divisions": 2857
+    }
+  },
+  "precincts_reported": 32137,
+  "total_precincts": 32143
+}
