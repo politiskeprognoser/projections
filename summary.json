@@ -1,19 +1,19 @@
 {
-  "timestamp": "2025-06-01T14:15:20+00:00",
+  "timestamp": "2025-06-01T14:44:06+00:00",
   "counted_pct": 100.0,
   "parties": [
     {
       "name": "TRZASKOWSKI",
       "current_votes": 6147743,
       "current_pct": 31.4,
-      "projected_votes": 6147808,
+      "projected_votes": 6147806,
       "projected_pct": 31.4
     },
     {
       "name": "NAWROCKI",
       "current_votes": 5790762,
       "current_pct": 29.5,
-      "projected_votes": 5790816,
+      "projected_votes": 5790815,
       "projected_pct": 29.5
     }
   ],
@@ -39,6 +39,6 @@
       "total_divisions": 2857
     }
   },
-  "precincts_reported": 32137,
+  "precincts_reported": 32140,
   "total_precincts": 32143
 }
