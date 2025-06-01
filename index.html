@@ -9,7 +9,7 @@
   <h1>Currently values reflect test data! Ignore it for now. Check back at 21:00 CEST for the first projections.</h1>
 
   <p>This projection updates every 60 seconds, based on the results published by <a href="https://wybory.gov.pl/prezydent2025/en/dane_w_arkuszach" target="_blank">PKW</a>. The actual rate of updates depend on how frequently and how fast results are reported.</p>
-  <p>Projection is based on the results in precincts which have already reported, while the remaining precinct results are projected based on the trends observed in those that have reported.</p>
+  <p>Projection is based on the results in precincts which have already reported, while the remaining precinct results are projected based on the trends observed in those that have reported. It does not take into account the exit poll. As with all projections, take the numbers with a grain of salt. The projection will initially be quite uncertain, but will become more accurate, the more of the votes have been counted.</p>
 
   
   <div id="results-summary"></div>
@@ -58,7 +58,7 @@
       // % Counted
       const counted = document.createElement("p");
       counted.innerHTML = `<strong>Counted:</strong> ${data.counted_pct.toFixed(2)}%`;
-      counted.style.fontSize = "24px";
+      counted.style.fontSize = "18x";
       container.appendChild(counted);
 
       // Results table
