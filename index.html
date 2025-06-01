@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Polish Presidential Election Projection</title>
 <style>
   #summary-text {
     font-size: 20px;
@@ -5,6 +10,7 @@
     white-space: pre-wrap;
   }
 </style>
+</head>
 <body>
   <h1>Polish presidential election projection</h1>
   <h1>Currently values reflect test data! Ignore it for now. Check back at 21:00 CEST for the first projections.</h1>
@@ -13,7 +19,7 @@
   <p>Projection is based on the results in precincts which have already reported, while the remaining precinct results are projected based on the trends observed in those that have reported.</p>
 
   
-  <pre id="summary-text">Loading summary...</pre>
+  <div id="results-summary"></div>
 
   <p id="last-updated">Last updated: loading…</p>
   
@@ -24,12 +30,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
   <script>
-    fetch('summary.txt?' + new Date().getTime())
-      .then(response => response.text())
-      .then(text => {
-        document.getElementById('summary-text').textContent = text;
-      });
-
     fetch('projected.csv')
       .then(response => response.text())
       .then(text => {
@@ -56,13 +56,62 @@
         document.getElementById('last-updated').textContent =
         "Last updated: " + new Date().toLocaleString("pl-PL");
       });
-    function filterTable() {
-  const input = document.getElementById("filter").value.toLowerCase();
-  const rows = document.querySelectorAll("#csv-table tr");
-  rows.forEach((row, index) => {
-    if (index === 0) return; // Keep header always
-    row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+fetch("summary.json")
+  .then(response => response.json())
+  .then(data => {
+    const container = document.getElementById("results-summary");
+
+    const counted = document.createElement("p");
+    counted.innerHTML = `<strong>Counted:</strong> ${data.counted_pct.toFixed(2)}%`;
+    container.appendChild(counted);
+
+    const table = document.createElement("table");
+    table.style.borderCollapse = "collapse";
+    table.style.marginBottom = "1em";
+
+    const header = document.createElement("tr");
+    ["Candidate", "Current Votes", "Current %", "Projected Votes", "Projected %"].forEach(text => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      th.style.borderBottom = "2px solid black";
+      th.style.padding = "4px 8px";
+      header.appendChild(th);
+    });
+    table.appendChild(header);
+
+    data.parties.forEach(p => {
+      const row = document.createElement("tr");
+
+      const currVotes = p.current_votes.toLocaleString("pl-PL");
+      const projVotes = p.projected_votes.toLocaleString("pl-PL");
+
+      [p.name, currVotes, `${p.current_pct.toFixed(1)}%`, projVotes, `${p.projected_pct.toFixed(1)}%`].forEach(val => {
+        const td = document.createElement("td");
+        td.textContent = val;
+        td.style.padding = "4px 8px";
+        row.appendChild(td);
+      });
+
+      table.appendChild(row);
+    });
+
+    container.appendChild(table);
+
+    const reportingHeader = document.createElement("p");
+    reportingHeader.textContent = "Places that have reported:";
+    container.appendChild(reportingHeader);
+
+    for (const [level, stats] of Object.entries(data.divisions)) {
+      const p = document.createElement("p");
+      const pct = (stats.reported_divisions / stats.total_divisions * 100).toFixed(1);
+      p.textContent = `${level}: ${stats.reported_divisions} out of ${stats.total_divisions} divisions (${pct}%) have at least one reported precinct`;
+      container.appendChild(p);
+    }
+
+    const precinctPct = (data.precincts_reported / data.total_precincts * 100).toFixed(1);
+    const precinctP = document.createElement("p");
+    precinctP.innerHTML = `<strong>Precincts:</strong> ${data.precincts_reported.toLocaleString("pl-PL")} out of ${data.total_precincts.toLocaleString("pl-PL")} (${precinctPct}%) have reported`;
+    container.appendChild(precinctP);
   });
-}
   </script>
 </body>

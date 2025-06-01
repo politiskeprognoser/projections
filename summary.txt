@@ -7,9 +7,9 @@ NAWROCKI                   5,790,762      29.5%          5,790,816        29.5%
 TRZASKOWSKI                6,147,743      31.4%          6,147,808        31.4%
 
 Places that have reported:
-Macroregions: 8 out of 8 divisions (100.0%) have at least one reported precinct
-Voivodeships: 18 out of 18 divisions (100.0%) have at least one reported precinct
-Sejmik constituencies: 90 out of 90 divisions (100.0%) have at least one reported precinct
-Powiats: 464 out of 465 divisions (99.8%) have at least one reported precinct
-Gminas: 2854 out of 2857 divisions (99.9%) have at least one reported precinct
+Macroregion: 8 out of 8 divisions (100.0%) have at least one reported precinct
+Voivodeship: 18 out of 18 divisions (100.0%) have at least one reported precinct
+Sejmik constituency: 90 out of 90 divisions (100.0%) have at least one reported precinct
+Powiat: 464 out of 465 divisions (99.8%) have at least one reported precinct
+Gmina: 2854 out of 2857 divisions (99.9%) have at least one reported precinct
 Precincts: 32,137 out of 32,143 (100.0%) have reported
