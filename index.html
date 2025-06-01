@@ -93,7 +93,7 @@
       const currVotes = p.current_votes.toLocaleString("en-GB");
       const projVotes = p.projected_votes.toLocaleString("en-GB");
 
-      [p.name, currVotes, `${p.current_pct.toFixed(1)}%`, projVotes, `${p.projected_pct.toFixed(1)}%`].forEach((val, i) => {
+      [p.name, currVotes, `${p.current_pct.toFixed(1)}%`, projVotes, `${p.projected_pct.toFixed(2)}%`].forEach((val, i) => {
         const td = document.createElement("td");
         td.textContent = val;
         td.style.padding = "6px 12px";
