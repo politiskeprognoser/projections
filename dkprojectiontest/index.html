@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Danish municipal election projection</title>
+</head>
+<body>
+  <h1>Danish municipal election projection</h1>
+  <p>This projection is based on the results published by <a href="https://valg.dk/" target="_blank">valg.dk</a>.</p>
+  <p>The projection is based on the results in polling areas that have already reported. The remaining polling area results are projected based on the trends observed in those that have reported. As with all projections, the numbers should be taken with a grain of salt. The projection will initially be quite uncertain but will become more accurate as more of the votes are counted. If no results have been reported in a municipality, no projection is made.</p>
+  <p>Important note: The projected vote shares will only represent the entire electorate once all 98 municipalities have at least one reported polling area.</p>
+
+  
+  <div id="results-summary"></div>  
+
+  <table border="1" id="csv-table"></table>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.1/papaparse.min.js"></script>
+<script>
+  fetch("Result data.json")
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById("results-summary");
+
+      // Turnout
+      const projectedTotalVotes = data.national.projected.total_votes;
+      const projectedElectorate = data.national.projected.electorate;
+      const turnoutPct = projectedElectorate ? (projectedTotalVotes / projectedElectorate * 100).toFixed(1) : "0.0";
+
+      // Invalid
+      const projectedValid = data.national.projected.valid_votes;
+      const projectedInvalid = data.national.projected.invalid_votes;
+      const invalidPct = projectedTotalVotes ? (projectedInvalid / projectedTotalVotes * 100).toFixed(1) : "0.0";
+
+      // Stats and dropdown
+      const topFlex = document.createElement("div");
+      topFlex.style.display = "flex";
+      topFlex.style.alignItems = "left";
+      topFlex.style.justifyContent = "flex-start";
+      topFlex.style.flexWrap = "wrap";
+      topFlex.style.columnGap = "100px";
+      topFlex.style.marginBottom = "1em";
+
+      // Stats
+      const statBlock = document.createElement("div");
+
+      const counted = document.createElement("p");
+      counted.innerHTML = `<strong>Counted:</strong> ${data.national.percent_reported.toFixed(1)}%`;
+      counted.style.fontSize = "20px";
+
+      const turnout = document.createElement("p");
+      turnout.innerHTML = `<strong>Turnout:</strong> ${turnoutPct}%`;
+      turnout.style.fontSize = "20px";
+
+      const invalid = document.createElement("p");
+      invalid.innerHTML = `<strong>Invalid votes:</strong> ${invalidPct}%`;
+      invalid.style.fontSize = "20px";
+
+      statBlock.appendChild(counted);
+      statBlock.appendChild(turnout);
+      statBlock.appendChild(invalid);
+
+      // Dropdown
+      const dropdownBlock = document.createElement("div");
+      dropdownBlock.style.display = "flex";
+      dropdownBlock.style.alignItems = "center";
+      dropdownBlock.style.gap = "8px";
+
+      const label = document.createElement("label");
+      label.htmlFor = "muni-select";
+      label.innerHTML = "<strong>Go to municipality:</strong>&nbsp;";
+      label.style.fontSize = "20px";
+
+      const select = document.createElement("select");
+      select.id = "muni-select";
+      select.style.fontSize = "20px";
+      select.innerHTML = `<option value="">Select...</option>`;
+
+      Object.keys(data.municipalities)
+        .sort((a, b) => a.localeCompare(b, 'da'))
+        .forEach(name => {
+          const option = document.createElement("option");
+          option.value = `./Municipality/${name}`;
+          option.textContent = name;
+          select.appendChild(option);
+        });
+
+      select.addEventListener("change", function () {
+        if (this.value) window.location.href = this.value;
+      });
+
+      dropdownBlock.appendChild(label);
+      dropdownBlock.appendChild(select);
+
+      topFlex.appendChild(statBlock);
+      topFlex.appendChild(dropdownBlock);
+      container.appendChild(topFlex);
+
+      // Results table
+      const table = document.createElement("table");
+      table.style.borderCollapse = "collapse";
+      table.style.marginBottom = "1em";
+      table.style.border = "1px solid black";
+
+      const nationalIsFullyCounted = data.national.percent_reported === 100;
+      table.style.maxWidth = nationalIsFullyCounted ? "800px" : "1200px";
+
+    const header = document.createElement("tr");
+    const nationalHeaderLabels = nationalIsFullyCounted
+      ? ["Party", "Votes", "%", "Seats"]
+      : ["Party", "Current Votes", "Current %", "Current Seats", "Projected Votes", "Projected %", "Projected Seats"];
+
+    nationalHeaderLabels.forEach((h, i) => {
+      const th = document.createElement("th");
+      th.textContent = h;
+      th.style.padding = "6px 12px";
+      th.style.fontSize = "18px";
+      th.style.border = "1px solid black";
+      th.style.textAlign = i === 0 ? "left" : "center";
+      if (i === 0) {
+        th.style.backgroundColor = "#F2F2F2";
+        th.style.color = "black";
+        th.style.width = nationalIsFullyCounted ? "320px" : "320px";
+      }
+      header.appendChild(th);
+    });
+      table.appendChild(header);
+
+      const projected = data.national.projected;
+      const current = data.national.current;
+
+      data.relevant_parties.forEach(party => {
+        const row = document.createElement("tr");
+
+        const currVotes = current.votes[party] || 0;
+        const currPct = current.percentages[party] || 0;
+        const currSeats = current.seats[party] || 0;
+        const projVotes = projected.votes[party] || 0;
+        const projPct = projected.percentages[party] || 0;
+        const projSeats = projected.seats[party] || 0;
+
+        [party, currVotes.toLocaleString(), `${currPct.toFixed(2)}%`, currSeats,
+         projVotes.toLocaleString(), `${projPct.toFixed(2)}%`, projSeats].forEach((val, i) => {
+          const td = document.createElement("td");
+          td.textContent = val;
+          td.style.padding = "6px 12px";
+          td.style.border = "1px solid black";
+          td.style.textAlign = i === 0 ? "left" : "center";
+
+          if (i === 0) {
+            td.style.fontWeight = "bold";
+            if (party === "A. Socialdemokratiet") {
+              td.style.backgroundColor = "#f04d46";
+              td.style.color = "white";
+            } else if (party === "B. Radikale Venstre") {
+              td.style.backgroundColor = "#733280";
+              td.style.color = "white";
+            } else if (party === "C. Det Konservative Folkeparti") {
+              td.style.backgroundColor = "#004931";
+              td.style.color = "white";
+            } else if (party === "F. SF - Socialistisk Folkeparti") {
+              td.style.backgroundColor = "#e07ea8";
+              td.style.color = "white";
+            } else if (party === "I. Liberal Alliance") {
+              td.style.backgroundColor = "#3fb2be";
+              td.style.color = "white";
+            } else if (party === "M. Moderaterne") {
+              td.style.backgroundColor = "#b385e0";
+              td.style.color = "white";
+            } else if (party === "O. Dansk Folkeparti") {
+              td.style.backgroundColor = "#fcd03b";
+              td.style.color = "black";
+            } else if (party === "V. Venstre, Danmarks Liberale Parti") {
+              td.style.backgroundColor = "#002883";
+              td.style.color = "white";
+            } else if (party === "Æ. Danmarksdemokraterne - Inger Støjberg") {
+              td.style.backgroundColor = "#479ee5";
+              td.style.color = "white";
+            } else if (party === "Ø. Enhedslisten - De Rød-Grønne") {
+              td.style.backgroundColor = "#e6801a";
+              td.style.color = "white";
+            } else if (party === "Å. Alternativet") {
+              td.style.backgroundColor = "#00ff00";
+              td.style.color = "black";
+            } else {
+              td.style.backgroundColor = "#c0c0c0";
+              td.style.color = "black";
+            }
+          }
+
+          row.appendChild(td);
+        });
+
+        table.appendChild(row);
+      });
+
+      // Other parties
+      const otherRow = document.createElement("tr");
+
+      const totalCurrentValid = current.valid_votes;
+      const totalProjectedValid = projected.valid_votes;
+
+      let knownCurrentVotes = 0;
+      let knownProjectedVotes = 0;
+
+      data.relevant_parties.forEach(party => {
+        knownCurrentVotes += current.votes[party] || 0;
+        knownProjectedVotes += projected.votes[party] || 0;
+      });
+
+      const otherCurrentVotes = totalCurrentValid - knownCurrentVotes;
+      const otherProjectedVotes = totalProjectedValid - knownProjectedVotes;
+
+      const otherCurrentPct = totalCurrentValid ? (otherCurrentVotes / totalCurrentValid * 100) : 0;
+      const otherProjectedPct = totalProjectedValid ? (otherProjectedVotes / totalProjectedValid * 100) : 0;
+
+      const otherRowData = nationalIsFullyCounted
+        ? ["Other parties", otherProjectedVotes.toLocaleString(), `${otherProjectedPct.toFixed(2)}%`, 0]
+        : [
+            "Other parties",
+            otherCurrentVotes.toLocaleString(), `${otherCurrentPct.toFixed(2)}%`, 0,
+            otherProjectedVotes.toLocaleString(), `${otherProjectedPct.toFixed(2)}%`, 0
+          ];
+
+      otherRowData.forEach((val, i) => {
+        const td = document.createElement("td");
+        td.textContent = val;
+        td.style.padding = "6px 12px";
+        td.style.border = "1px solid black";
+        td.style.textAlign = i === 0 ? "left" : "center";
+
+        if (i === 0) {
+          td.style.fontWeight = "bold";
+          td.style.backgroundColor = "#808080";
+          td.style.color = "white";
+        }
+
+        otherRow.appendChild(td);
+      });
+
+      table.appendChild(otherRow);
+
+      // Total row
+      const totalRow = document.createElement("tr");
+
+      let totalCurrentVotes = 0;
+      let totalProjectedVotes = 0;
+      let totalCurrentSeats = 0;
+      let totalProjectedSeats = 0;
+
+      data.relevant_parties.forEach(party => {
+        totalCurrentVotes += current.votes[party] || 0;
+        totalProjectedVotes += projected.votes[party] || 0;
+        totalCurrentSeats += current.seats[party] || 0;
+        totalProjectedSeats += projected.seats[party] || 0;
+      });
+
+      totalCurrentVotes += otherCurrentVotes;
+      totalProjectedVotes += otherProjectedVotes;
+
+      const totalRowData = nationalIsFullyCounted
+        ? ["TOTAL", totalProjectedVotes.toLocaleString(), "100.00%", totalProjectedSeats]
+        : [
+            "TOTAL",
+            totalCurrentVotes.toLocaleString(), "100.00%", totalCurrentSeats,
+            totalProjectedVotes.toLocaleString(), "100.00%", totalProjectedSeats
+          ];
+
+      totalRowData.forEach((val, i) => {
+        const td = document.createElement("td");
+        td.textContent = val;
+        td.style.padding = "6px 12px";
+        td.style.border = "1px solid black";
+        td.style.textAlign = i === 0 ? "left" : "center";
+        if (i === 0) {
+          td.style.fontWeight = "bold";
+          td.style.backgroundColor = "#F2F2F2";
+          td.style.color = "black";
+        }
+        totalRow.appendChild(td);
+      });
+
+      table.appendChild(totalRow);
+
+      container.appendChild(table);
+
+      // Division summary
+      const reportingHeader = document.createElement("p");
+
+      const munReported = data.national.municipalities_with_results;
+      const munTotal = data.national.total_municipalities;
+      const p = document.createElement("p");
+      p.textContent = `${munReported} out of ${munTotal} municipalities have at least one reported polling area`;
+      container.appendChild(p);
+
+      // Precinct summary
+      const precinctPct = (data.national.precincts_reported / data.national.total_precincts * 100).toFixed(1);
+      const precinctP = document.createElement("p");
+      precinctP.textContent = `${data.national.precincts_reported.toLocaleString("en-GB")} out of ${data.national.total_precincts.toLocaleString("en-GB")} (${precinctPct}%) polling areas have reported`;
+      container.appendChild(precinctP);
+
+      // Last updated
+      const updatedDate = new Date(data.timestamp);
+      const formattedDate = updatedDate.toLocaleString("en-GB", {
+        timeZone: "Europe/Copenhagen",
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZoneName: 'short'
+      });
+      const lastUpdatedP = document.createElement("p");
+      lastUpdatedP.textContent = `Last updated: ${formattedDate}`;
+      lastUpdatedP.style.fontSize = "16px";
+      lastUpdatedP.style.color = "gray";
+      container.appendChild(lastUpdatedP);
+      const municipalities = data.municipalities;
+
+        for (const [name, details] of Object.entries(municipalities)) {
+          const block = document.createElement("div");
+          block.style.marginBottom = "2em";
+
+          // Header
+          const headerLink = document.createElement("h2");
+          headerLink.style.fontSize = "18px";
+          const link = document.createElement("a");
+          link.href = encodeURI(`./Municipality/${name}`);
+          link.textContent = name;
+          link.style.color = "blue";
+          link.style.textDecoration = "underline";
+          headerLink.appendChild(link);
+          block.appendChild(headerLink);
+
+          // Percent reported
+          if (details.precincts_reported === 0) {
+            const msg = document.createElement("p");
+            msg.textContent = `No precincts in ${name} have reported.`;
+            msg.style.fontSize = "16px";
+            block.appendChild(msg);
+            container.appendChild(block);
+            continue;
+          } else {
+            const percentReported = document.createElement("p");
+            percentReported.innerHTML = `<strong>Counted:</strong> ${details.percent_reported.toFixed(1)}%`;
+            const isFullyCounted = details.percent_reported === 100;
+
+            percentReported.style.fontSize = "16px";
+            block.appendChild(percentReported);
+            
+          // Results table for each municipality
+          const muntable = document.createElement("table");
+          muntable.style.borderCollapse = "collapse";
+          muntable.style.width = "100%";
+          muntable.style.border = "1px solid black";
+
+          if (isFullyCounted) {
+            muntable.style.maxWidth = "500px";
+          } else {
+            muntable.style.maxWidth = "800px";
+          }
+
+          const munheader = document.createElement("tr");
+          const headerLabels = isFullyCounted
+            ? ["Party", "Votes", "%", "Quotients", "Seats"]
+            : [
+                "Party", "Current Votes", "Current %", "Current Quotients", "Current Seats",
+                "Projected Votes", "Projected %", "Projected Quotients", "Projected Seats"
+              ];
+
+          headerLabels.forEach((label, i) => {
+            const th = document.createElement("th");
+            th.textContent = label;
+            th.style.padding = "4px";
+            th.style.fontSize = "14px";
+            th.style.border = "1px solid black";
+            th.style.textAlign = i === 0 ? "left" : "center";
+            if (i === 0) {
+              th.style.backgroundColor = "#F2F2F2";
+              th.style.color = "black";
+              th.style.textAlign = "left";
+              if (isFullyCounted) {
+                th.style.width = "140px";
+              } else {
+                th.style.width = "200px";
+              }
+            }
+            munheader.appendChild(th);
+          });
+          muntable.appendChild(munheader);
+
+          const current = details.current;
+          const projected = details.projected;
+
+          const allParties = details.projected_vote_order;
+
+          allParties.forEach(party => {
+            const row = document.createElement("tr");
+
+            const currVotes = current.votes[party] || 0;
+            const currPct = current.percentages[party] || 0;
+            const currQuo = current.quotients[party] || 0;
+            const currSeats = current.seats[party] || 0;
+
+            const projVotes = projected.votes[party] || 0;
+            const projPct = projected.percentages[party] || 0;
+            const projQuo = projected.quotients[party] || 0;
+            const projSeats = projected.seats[party] || 0;
+
+            const rowData = isFullyCounted
+              ? [party, projVotes.toLocaleString(), `${projPct.toFixed(2)}%`, projQuo.toFixed(2), projSeats]
+              : [
+                  party, currVotes.toLocaleString(), `${currPct.toFixed(2)}%`, currQuo.toFixed(2), currSeats,
+                  projVotes.toLocaleString(), `${projPct.toFixed(2)}%`, projQuo.toFixed(2), projSeats
+                ];
+
+            rowData.forEach((val, i) => {
+              const td = document.createElement("td");
+              td.textContent = val;
+              td.style.padding = "4px";
+              td.style.fontSize = "14px";
+              td.style.border = "1px solid black";
+              td.style.textAlign = i === 0 ? "left" : "center";
+              if (i === 0) {
+                td.style.fontWeight = "bold";
+                td.style.textAlign = "left";
+                td.style.whiteSpace = "nowrap";
+                if (isFullyCounted) {
+                  td.style.width = "140px";
+                } else {
+                  td.style.width = "200px";
+                }
+                // Background colors
+                if (party === "A. Socialdemokratiet") {
+                  td.style.backgroundColor = "#f04d46";
+                  td.style.color = "white";
+                } else if (party === "B. Radikale Venstre") {
+                  td.style.backgroundColor = "#733280";
+                  td.style.color = "white";
+                } else if (party === "C. Det Konservative Folkeparti") {
+                  td.style.backgroundColor = "#004931";
+                  td.style.color = "white";
+                } else if (party === "F. SF - Socialistisk Folkeparti") {
+                  td.style.backgroundColor = "#e07ea8";
+                  td.style.color = "white";
+                } else if (party === "I. Liberal Alliance") {
+                  td.style.backgroundColor = "#3fb2be";
+                  td.style.color = "white";
+                } else if (party === "M. Moderaterne") {
+                  td.style.backgroundColor = "#b385e0";
+                  td.style.color = "white";
+                } else if (party === "O. Dansk Folkeparti") {
+                  td.style.backgroundColor = "#fcd03b";
+                  td.style.color = "black";
+                } else if (party === "V. Venstre, Danmarks Liberale Parti") {
+                  td.style.backgroundColor = "#002883";
+                  td.style.color = "white";
+                } else if (party === "Æ. Danmarksdemokraterne - Inger Støjberg") {
+                  td.style.backgroundColor = "#479ee5";
+                  td.style.color = "white";
+                } else if (party === "Ø. Enhedslisten - De Rød-Grønne") {
+                  td.style.backgroundColor = "#e6801a";
+                  td.style.color = "white";
+                } else if (party === "Å. Alternativet") {
+                  td.style.backgroundColor = "#00ff00";
+                  td.style.color = "black";
+                } else if (party === "K. KD - Kristendemokraterne") {
+                  td.style.backgroundColor = "#b1a269";
+                  td.style.color = "black";
+                } else if (party === "S. Slesvigsk Parti") {
+                  td.style.backgroundColor = "#e8ae00";
+                  td.style.color = "black";
+                } else {
+                  td.style.backgroundColor = "#808080";
+                  td.style.color = "white";
+                }
+              }
+              row.appendChild(td);
+            });
+
+            muntable.appendChild(row);
+          });
+          // TOTAL row
+          const totalRow = document.createElement("tr");
+
+          let totalCurrVotes = 0;
+          let totalProjVotes = 0;
+          let totalCurrQuo = 0;
+          let totalProjQuo = 0;
+          let totalCurrSeats = 0;
+          let totalProjSeats = 0;
+
+          allParties.forEach(party => {
+            totalCurrVotes += current.votes[party] || 0;
+            totalCurrQuo += current.quotients[party] || 0;
+            totalCurrSeats += current.seats[party] || 0;
+            totalProjVotes += projected.votes[party] || 0;
+            totalProjQuo += projected.quotients[party] || 0;
+            totalProjSeats += projected.seats[party] || 0;
+          });
+
+          const totalRowData = isFullyCounted
+            ? [
+                "TOTAL",
+                totalProjVotes.toLocaleString(),
+                "100.00%",
+                totalProjQuo.toFixed(2),
+                totalProjSeats
+              ]
+            : [
+                "TOTAL",
+                totalCurrVotes.toLocaleString(),
+                "100.00%",
+                totalCurrQuo.toFixed(2),
+                totalCurrSeats,
+                totalProjVotes.toLocaleString(),
+                "100.00%",
+                totalProjQuo.toFixed(2),
+                totalProjSeats
+              ];
+
+          totalRowData.forEach((val, i) => {
+            const td = document.createElement("td");
+            td.textContent = val;
+            td.style.padding = "4px";
+            td.style.fontSize = "14px";
+            td.style.border = "1px solid black";
+            td.style.textAlign = i === 0 ? "left" : "center";
+            if (i === 0) {
+              td.style.fontWeight = "bold";
+              td.style.backgroundColor = "#F2F2F2";
+              td.style.color = "black";
+            }
+            totalRow.appendChild(td);
+          });
+
+          muntable.appendChild(totalRow);
+          block.appendChild(muntable);
+          container.appendChild(block);
+          }
+        }
+    });
+</script>
+</body>
